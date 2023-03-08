@@ -1,0 +1,57 @@
+{
+  "name": "uml",
+  "scopeName": "source.uml",
+  "fileTypes": [
+    ".umodel"
+  ],
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "name": "keyword.control.uml",
+      "match": "\\b(class|datatype|extends|many|model)\\b"
+    },
+    {
+      "name": "string.quoted.double.uml",
+      "begin": "\"",
+      "end": "\\\\.[^\"\\\\]\""
+    },
+    {
+      "name": "string.quoted.single.uml",
+      "begin": "'",
+      "end": "\\\\.[^'\\\\]'"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.block.uml",
+          "begin": "/\\*",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.uml"
+            }
+          },
+          "end": "\\*/",
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.uml"
+            }
+          }
+        },
+        {
+          "begin": "//",
+          "beginCaptures": {
+            "1": {
+              "name": "punctuation.whitespace.comment.leading.uml"
+            }
+          },
+          "end": "(?=$)",
+          "name": "comment.line.uml"
+        }
+      ]
+    }
+  }
+}

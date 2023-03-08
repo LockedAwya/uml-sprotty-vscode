@@ -18,17 +18,17 @@ import ElkConstructor from 'elkjs/lib/elk.bundled';
 import { createDefaultModule, createDefaultSharedModule, inject, Module, PartialLangiumServices, DefaultSharedModuleContext } from 'langium';
 import { LangiumSprottyServices, LangiumSprottySharedServices, SprottyDiagramServices, SprottySharedModule } from 'langium-sprotty';
 import { DefaultElementFilter, ElkFactory, ElkLayoutEngine, IElementFilter, ILayoutConfigurator } from 'sprotty-elk/lib/elk-layout';
-import { StatesDiagramGenerator } from './diagram-generator';
-import { StatesGeneratedModule, StatesGeneratedSharedModule } from './generated/module';
-import { StatesLayoutConfigurator } from './layout-config';
-import { registerValidationChecks, StatesValidator } from './states-validator';
+import { UMLDiagramGenerator } from './diagram-generator';
+import { UmlDiagramGeneratedModule, UmlGeneratedSharedModule } from './generated/module';
+import { UmlLayoutConfigurator } from './layout-config';
+import { registerValidationChecks, UMLValidator } from './states-validator';
 
 /**
  * Declaration of custom services - add your own service classes here.
  */
-export type StatesAddedServices = {
+export type UmlAddedServices = {
     validation: {
-        StatesValidator: StatesValidator
+        UMLValidator: UMLValidator
     },
     layout: {
         ElkFactory: ElkFactory,
@@ -41,25 +41,25 @@ export type StatesAddedServices = {
  * Union of Langium default services and your custom services - use this as constructor parameter
  * of custom service classes.
  */
-export type StatesServices = LangiumSprottyServices & StatesAddedServices
+export type UmlServices = LangiumSprottyServices & UmlAddedServices
 
 /**
  * Dependency injection module that overrides Langium default services and contributes the
  * declared custom services. The Langium defaults can be partially specified to override only
  * selected services, while the custom services must be fully specified.
  */
-export const StatesModule: Module<StatesServices, PartialLangiumServices & SprottyDiagramServices & StatesAddedServices> = {
+export const UmlModule: Module<UmlServices, PartialLangiumServices & SprottyDiagramServices & UmlAddedServices> = {
     diagram: {
-        DiagramGenerator: services => new StatesDiagramGenerator(services),
+        DiagramGenerator: services => new UMLDiagramGenerator(services),
         ModelLayoutEngine: services => new ElkLayoutEngine(services.layout.ElkFactory, services.layout.ElementFilter, services.layout.LayoutConfigurator) as any
     },
     validation: {
-        StatesValidator: () => new StatesValidator()
+        UMLValidator: () => new UMLValidator()
     },
     layout: {
         ElkFactory: () => () => new ElkConstructor({ algorithms: ['layered'] }),
         ElementFilter: () => new DefaultElementFilter,
-        LayoutConfigurator: () => new StatesLayoutConfigurator
+        LayoutConfigurator: () => new UmlLayoutConfigurator
     }
 };
 
@@ -78,16 +78,16 @@ export const StatesModule: Module<StatesServices, PartialLangiumServices & Sprot
  * @param context Optional module context with the LSP connection
  * @returns An object wrapping the shared services and the language-specific services
  */
-export function createStatesServices(context: DefaultSharedModuleContext): { shared: LangiumSprottySharedServices, states: StatesServices } {
+export function createStatesServices(context: DefaultSharedModuleContext): { shared: LangiumSprottySharedServices, states: UmlServices } {
     const shared = inject(
         createDefaultSharedModule(context),
-        StatesGeneratedSharedModule,
+        UmlGeneratedSharedModule,
         SprottySharedModule
     );
     const states = inject(
         createDefaultModule({ shared }),
-        StatesGeneratedModule,
-        StatesModule
+        UmlDiagramGeneratedModule,
+        UmlModule
     );
     registerValidationChecks(states);
     shared.ServiceRegistry.register(states);

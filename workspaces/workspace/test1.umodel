@@ -1,0 +1,20 @@
+datatype String
+ 
+class Blog {
+    title: String
+    many posts: Post
+}
+ 
+class HasAuthor {
+    author: String
+}
+ 
+class Post extends HasAuthor {
+    title: String
+    content: String
+    many comments: Comment
+}
+ 
+class Comment extends HasAuthor {
+    content: String
+}

@@ -18,7 +18,7 @@ import { LayoutOptions } from 'elkjs';
 import { DefaultLayoutConfigurator } from 'sprotty-elk/lib/elk-layout';
 import { SGraph, SModelIndex, SNode, SPort } from 'sprotty-protocol';
 
-export class StatesLayoutConfigurator extends DefaultLayoutConfigurator {
+export class UmlLayoutConfigurator extends DefaultLayoutConfigurator {
 
     protected override graphOptions(sgraph: SGraph, index: SModelIndex): LayoutOptions {
         return {

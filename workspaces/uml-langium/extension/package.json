@@ -1,14 +1,9 @@
 {
-    "name": "states-extension-langium",
-    "displayName": "States Example (Langium)",
-    "description": "An example Xtext-based DSL with Sprotty diagrams for statemachines",
+    "name": "uml-extension-langium",
+    "displayName": "",
+    "description": "",
     "private": true,
     "publisher": "TypeFox",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/TypeFox/sprotty-vscode",
-        "directory": "examples/states-langium/extension"
-    },
     "version": "0.5.0",
     "engines": {
         "vscode": "^1.46.0"
@@ -16,35 +11,34 @@
     "categories": [
         "Programming Languages"
     ],
-    "icon": "icon.png",
     "contributes": {
         "languages": [
             {
-                "id": "states",
+                "id": "uml",
                 "aliases": [
-                    "states",
-                    "sm"
+                    "uml",
+                    "umodel"
                 ],
                 "extensions": [
-                    ".sm"
+                    ".umodel"
                 ],
                 "configuration": "./language-configuration.json"
             }
         ],
         "grammars": [
             {
-                "language": "states",
-                "scopeName": "source.states",
-                "path": "./syntaxes/states.tmLanguage.json"
+                "language": "uml",
+                "scopeName": "source.umodel",
+                "path": "./syntaxes/umodel.tmLanguage.json"
             }
         ],
         "customEditors": [
             {
-                "viewType": "states",
-                "displayName": "States Editor",
+                "viewType": "uml-diagram",
+                "displayName": "Uml-diagram Editor",
                 "selector": [
                     {
-                        "filenamePattern": "*.sm"
+                        "filenamePattern": "*.umodel"
                     }
                 ],
                 "priority": "option"
@@ -53,90 +47,90 @@
         "viewsContainers": {
             "activitybar": [
                 {
-                    "id": "states-container",
-                    "title": "States",
+                    "id": "uml-container",
+                    "title": "UML",
                     "icon": "$(symbol-structure)"
                 }
             ]
         },
         "views": {
-            "states-container": [
+            "uml-container": [
                 {
-                    "id": "states",
+                    "id": "uml",
                     "type": "webview",
-                    "name": "State Machine"
+                    "name": "UML Display"
                 }
             ]
         },
         "commands": [
             {
-                "command": "states.diagram.open",
+                "command": "uml.diagram.open",
                 "title": "Open in Diagram",
                 "icon": "$(symbol-structure)",
-                "category": "States Diagram"
+                "category": "Uml Diagram"
             },
             {
-                "command": "states.diagram.fit",
+                "command": "uml.diagram.fit",
                 "title": "Fit to Screen",
-                "category": "States Diagram"
+                "category": "Uml Diagram"
             },
             {
-                "command": "states.diagram.center",
+                "command": "uml.diagram.center",
                 "title": "Center selection",
-                "category": "States Diagram"
+                "category": "Uml Diagram"
             },
             {
-                "command": "states.diagram.delete",
+                "command": "uml.diagram.delete",
                 "title": "Delete selected element",
-                "category": "States Diagram"
+                "category": "Uml Diagram"
             },
             {
-                "command": "states.diagram.export",
+                "command": "uml.diagram.export",
                 "title": "Export diagram to SVG",
-                "category": "States Diagram"
+                "category": "Uml Diagram"
             }
         ],
         "menus": {
             "commandPalette": [
                 {
-                    "command": "states.diagram.open",
-                    "when": "editorLangId == 'states'"
+                    "command": "uml.diagram.open",
+                    "when": "editorLangId == 'uml'"
                 },
                 {
-                    "command": "states.diagram.fit",
-                    "when": "states-diagram-focused"
+                    "command": "uml.diagram.fit",
+                    "when": "uml-diagram-focused"
                 },
                 {
-                    "command": "states.diagram.center",
-                    "when": "states-diagram-focused"
+                    "command": "uml.diagram.center",
+                    "when": "uml-diagram-focused"
                 },
                 {
-                    "command": "states.diagram.delete",
-                    "when": "states-diagram-focused"
+                    "command": "uml.diagram.delete",
+                    "when": "uml-diagram-focused"
                 },
                 {
-                    "command": "states.diagram.export",
-                    "when": "states-diagram-focused"
+                    "command": "uml.diagram.export",
+                    "when": "uml-diagram-focused"
                 }
             ],
             "editor/context": [
                 {
-                    "command": "states.diagram.open",
-                    "when": "editorLangId == 'states'",
+                    "command": "uml.diagram.open",
+                    "when": "editorLangId == 'uml'",
                     "group": "navigation"
                 }
             ],
             "editor/title": [
                 {
-                    "command": "states.diagram.open",
-                    "when": "editorLangId == 'states'",
+                    "command": "uml.diagram.open",
+                    "when": "editorLangId == 'uml'",
                     "group": "navigation"
                 }
             ],
             "explorer/context": [
                 {
-                    "command": "states.diagram.open",
-                    "when": "resourceExtname == '.sm'",
+                    "command": "uml.diagram.open",
+                    "when": "resourceExtname == '.umodel'",
                     "group": "navigation"
                 }
             ]
@@ -145,35 +139,35 @@
             {
                 "key": "alt+f",
                 "mac": "alt+f",
-                "command": "states.diagram.fit",
-                "when": "states-diagram-focused"
+                "command": "uml.diagram.fit",
+                "when": "uml-diagram-focused"
             },
             {
                 "key": "alt+c",
                 "mac": "alt+c",
-                "command": "states.diagram.center",
-                "when": "states-diagram-focused"
+                "command": "uml.diagram.center",
+                "when": "uml-diagram-focused"
             },
             {
                 "key": "alt+e",
                 "mac": "alt+e",
-                "command": "states.diagram.export",
-                "when": "states-diagram-focused"
+                "command": "uml.diagram.export",
+                "when": "uml-diagram-focused"
             },
             {
                 "key": "delete",
                 "mac": "delete",
-                "command": "states.diagram.delete",
-                "when": "states-diagram-focused"
+                "command": "uml.diagram.delete",
+                "when": "uml-diagram-focused"
             }
         ]
     },
     "activationEvents": [
-        "onLanguage:states",
-        "onWebviewPanel:states",
-        "onCustomEditor:states",
-        "onView:states",
-        "onCommand:states.diagram.open"
+        "onLanguage:uml",
+        "onWebviewPanel:uml",
+        "onCustomEditor:uml",
+        "onView:uml",
+        "onCommand:uml.diagram.open"
     ],
     "files": [
         "lib",
@@ -202,6 +196,6 @@
         "build": "webpack --mode=development",
         "watch": "webpack --mode=development --watch",
         "copy-language-server": "cp ../language-server/out/* pack/",
-        "copy-webview": "cp ../../states-webview/out/* pack/"
+        "copy-webview": "cp ../../uml-webview/out/* pack/"
     }
 }

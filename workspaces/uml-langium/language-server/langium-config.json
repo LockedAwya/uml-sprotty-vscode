@@ -1,9 +1,9 @@
 {
-    "projectName": "States",
+    "projectName": "UML",
     "languages": [{
-        "id": "states",
-        "grammar": "src/states.langium",
-        "fileExtensions": [".sm"],
+        "id": "uml",
+        "grammar": "src/uml.langium",
+        "fileExtensions": [".umodel"],
         "textMate": {
             "out": "../extension/syntaxes/states.tmLanguage.json"
         }

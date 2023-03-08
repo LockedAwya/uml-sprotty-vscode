@@ -36,7 +36,7 @@ export function activate(context: vscode.ExtensionContext) {
             extensionUri: context.extensionUri,
             defaultDiagramType: 'states',
             languageClient,
-            supportedFileExtensions: ['.sm']
+            supportedFileExtensions: ['.umodel']
         });
         registerDefaultCommands(webviewPanelManager, context, { extensionPrefix: 'states' });
     }
@@ -45,9 +45,9 @@ export function activate(context: vscode.ExtensionContext) {
         // Set up webview editor associated with file type
         const webviewEditorProvider = new LspSprottyEditorProvider({
             extensionUri: context.extensionUri,
-            viewType: 'states',
+            viewType: 'uml-diagram',
             languageClient,
-            supportedFileExtensions: ['.sm']
+            supportedFileExtensions: ['.umodel']
         });
         context.subscriptions.push(
             vscode.window.registerCustomEditorProvider('states', webviewEditorProvider, {
@@ -61,17 +61,17 @@ export function activate(context: vscode.ExtensionContext) {
         // Set up webview view shown in the side panel
         const webviewViewProvider = new LspSprottyViewProvider({
             extensionUri: context.extensionUri,
-            viewType: 'states',
+            viewType: 'uml-diagram',
             languageClient,
-            supportedFileExtensions: ['.sm'],
+            supportedFileExtensions: ['.umodel'],
             openActiveEditor: true
         });
         context.subscriptions.push(
-            vscode.window.registerWebviewViewProvider('states', webviewViewProvider, {
+            vscode.window.registerWebviewViewProvider('uml-diagram', webviewViewProvider, {
                 webviewOptions: { retainContextWhenHidden: true }
             })
         );
-        registerDefaultCommands(webviewViewProvider, context, { extensionPrefix: 'states' });
+        registerDefaultCommands(webviewViewProvider, context, { extensionPrefix: 'uml-diagram' });
         registerTextEditorSync(webviewViewProvider, context);
     }
 }
@@ -90,12 +90,12 @@ function createLanguageClient(context: vscode.ExtensionContext): LanguageClient 
         debug: { module: serverModule, transport: TransportKind.ipc, options: debugOptions }
     };
 
-    const fileSystemWatcher = vscode.workspace.createFileSystemWatcher('**/*.sm');
+    const fileSystemWatcher = vscode.workspace.createFileSystemWatcher('**/*.umodel');
     context.subscriptions.push(fileSystemWatcher);
 
     // Options to control the language client
     const clientOptions: LanguageClientOptions = {
-        documentSelector: [{ scheme: 'file', language: 'states' }],
+        documentSelector: [{ scheme: 'file', language: 'uml' }],
         synchronize: {
             // Notify the server about file changes to files contained in the workspace
             fileEvents: fileSystemWatcher
@@ -104,8 +104,8 @@ function createLanguageClient(context: vscode.ExtensionContext): LanguageClient 
 
     // Create the language client and start the client.
     const languageClient = new LanguageClient(
-        'states',
-        'States',
+        'uml',
+        'UML',
         serverOptions,
         clientOptions
     );
