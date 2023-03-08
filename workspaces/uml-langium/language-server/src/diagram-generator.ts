@@ -57,7 +57,7 @@ export class UMLDiagramGenerator extends LangiumDiagramGenerator {
                 <SLabel>{
                     type: 'label:xref',
                     id: idCache.uniqueId(edgeId + '.label'),
-                    text: inheritance.class?.ref?.name
+                    text: "extends"
                 }
             ]
         };

@@ -7,10 +7,10 @@ const path = require('path');
 const config = {
     target: 'node',
 
-    entry: path.resolve(__dirname, 'src/states-extension.ts'),
+    entry: path.resolve(__dirname, 'src/uml-extension.ts'),
     output: {
         path: path.resolve(__dirname, 'pack'),
-        filename: 'states-extension.js',
+        filename: 'uml-extension.js',
         libraryTarget: "commonjs2",
         devtoolModuleFilenameTemplate: "../[resource-path]",
     },

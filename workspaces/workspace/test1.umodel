@@ -1,3 +1,5 @@
+model test
+
 datatype String
  
 class Blog {

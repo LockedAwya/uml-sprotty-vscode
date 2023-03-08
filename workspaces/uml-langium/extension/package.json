@@ -176,7 +176,7 @@
         "syntaxes",
         "webview"
     ],
-    "main": "./pack/states-extension",
+    "main": "./pack/uml-extension",
     "devDependencies": {
         "@types/node": "^12.12.6",
         "@types/vscode": "1.50.0",

@@ -1,12 +1,16 @@
 {
     "projectName": "UML",
-    "languages": [{
-        "id": "uml",
-        "grammar": "src/uml.langium",
-        "fileExtensions": [".umodel"],
-        "textMate": {
-            "out": "../extension/syntaxes/states.tmLanguage.json"
+    "languages": [
+        {
+            "id": "uml",
+            "grammar": "src/uml.langium",
+            "fileExtensions": [
+                ".umodel"
+            ],
+            "textMate": {
+                "out": "../extension/syntaxes/umodel.tmLanguage.json"
+            }
         }
-    }],
+    ],
     "out": "src/generated"
 }

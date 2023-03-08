@@ -38,7 +38,7 @@ export function activate(context: vscode.ExtensionContext) {
             languageClient,
             supportedFileExtensions: ['.umodel']
         });
-        registerDefaultCommands(webviewPanelManager, context, { extensionPrefix: 'states' });
+        registerDefaultCommands(webviewPanelManager, context, { extensionPrefix: 'uml' });
     }
 
     if (diagramMode === 'editor') {
