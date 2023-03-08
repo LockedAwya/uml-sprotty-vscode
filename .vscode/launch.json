@@ -59,20 +59,5 @@
             ],
             "sourceMaps": true
         },
-        {
-            "name": "States Example (Xtext)",
-            "type": "extensionHost",
-            "request": "launch",
-            "runtimeExecutable": "${execPath}",
-            "args": [
-                "${workspaceFolder}/examples/workspace",
-                "--extensionDevelopmentPath=${workspaceFolder}/examples/states-xtext/extension"
-            ],
-            "outFiles": [
-                "${workspaceFolder}/examples/states-xtext/extension/pack/*.js",
-                "${workspaceFolder}/sprotty-vscode-extension/lib/**/*.js"
-            ],
-            "sourceMaps": true
-        }
     ]
 }
