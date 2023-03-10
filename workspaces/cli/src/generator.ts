@@ -86,7 +86,8 @@ function generateTypeElements(destination: string, elements: Array<Type | Class>
 // }
 
 function generateClass(_class: Class, fileNode: CompositeGeneratorNode): void {
-    const maybeExtends = _class.superType ? ` extends ${_class.superType.$refText}` : '';
+    //const maybeExtends = _class.superType ? ` extends ${_class.superType.$refText}` : '';
+    const maybeExtends = _class.inheritance.length !== 0 ? ` extends ${_class.inheritance[0].class.$refText}` : '';
     fileNode.append(`class ${_class.name}${maybeExtends} {`, NL);
     fileNode.indent(classBody => {
         const featureData = _class.features.map(f => generateFeature(f, classBody));

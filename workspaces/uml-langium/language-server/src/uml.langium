@@ -20,12 +20,12 @@ DataType:
 //     '}';
 
 Class:
-    'class' name=ID ('extends' superType=[Class:QualifiedName])? '{'
+    'class' name=ID (inheritance+=Inheritance)? '{'
         (features+=Feature)*
     '}';
 
-// Inheritance:
-//     'extends' superType=[Class:QualifiedName]?;
+Inheritance:
+    'extends' class=[Class];
 
 Feature:
     (many?='many')? name=ID ':' type=[Type:QualifiedName];
