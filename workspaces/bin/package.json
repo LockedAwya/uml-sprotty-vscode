@@ -1,0 +1,13 @@
+{
+  "name": "bin-langium",
+  "version": "1.0.0",
+  "description": "script to generate files",
+  "private": true,
+  "devDependencies": {},
+  "scripts": {
+    "prepare": "node cli generate ../workspace/test1.umodel",
+    "clean": "shx rm -fr out"
+  },
+  "author": "",
+  "license": "ISC"
+}

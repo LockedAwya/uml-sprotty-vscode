@@ -1,0 +1,14 @@
+{
+  "name": "cli-langium",
+  "version": "1.0.0",
+  "description": "generating java file from dsl",
+  "private": true,
+  "devDependencies": {},
+  "scripts": {
+    "specify-path": "..//bin//cli generate ..//workspace//test1.umodel",
+    "prepare": "tsc",
+    "clean": "shx rm -fr out"
+  },
+  "author": "",
+  "license": "ISC"
+}

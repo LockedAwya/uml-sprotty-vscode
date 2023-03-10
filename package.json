@@ -19,9 +19,12 @@
     "packages/sprotty-vscode-webview",
     "workspaces/uml-langium/extension",
     "workspaces/uml-langium/language-server",
-    "workspaces/uml-webview"
+    "workspaces/uml-webview",
+    "workspaces/bin",
+    "workspaces/cli"
   ],
   "dependencies": {
+    "@types/lodash": "^4.14.191",
     "commander": "^10.0.0"
   }
 }
