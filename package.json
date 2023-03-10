@@ -20,5 +20,8 @@
     "workspaces/uml-langium/extension",
     "workspaces/uml-langium/language-server",
     "workspaces/uml-webview"
-  ]
+  ],
+  "dependencies": {
+    "commander": "^10.0.0"
+  }
 }

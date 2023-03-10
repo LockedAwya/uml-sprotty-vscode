@@ -2,10 +2,11 @@ grammar UmlDiagram
 
 entry Umlmodel:
     'model' name=ID
+    //(elements+=AbstractElement)*;
     (classes+=Class | datatypes+=DataType | types+=Type)*;
 
 // AbstractElement:
-//     Type;
+//     (classes+=Class | datatypes+=DataType | types+=Type)*;
 
 Type:
     DataType | Class;
@@ -13,13 +14,18 @@ Type:
 DataType:
     'datatype' name=ID;
 
+// Class:
+//     'class' name=ID (inheritance=Inheritance)? '{'
+//         (features+=Feature)*
+//     '}';
+
 Class:
-    'class' name=ID (inheritance+=Inheritance*)? '{'
+    'class' name=ID ('extends' superType=[Class:QualifiedName])? '{'
         (features+=Feature)*
     '}';
 
-Inheritance:
-    'extends' class=[Class:QualifiedName]?;
+// Inheritance:
+//     'extends' superType=[Class:QualifiedName]?;
 
 Feature:
     (many?='many')? name=ID ':' type=[Type:QualifiedName];

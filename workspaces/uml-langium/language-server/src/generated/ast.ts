@@ -20,8 +20,8 @@ export interface Class extends AstNode {
     readonly $container: Umlmodel;
     readonly $type: 'Class';
     features: Array<Feature>
-    inheritance: Array<Inheritance>
     name: string
+    superType?: Reference<Class>
 }
 
 export const Class = 'Class';
@@ -56,18 +56,6 @@ export function isFeature(item: unknown): item is Feature {
     return reflection.isInstance(item, Feature);
 }
 
-export interface Inheritance extends AstNode {
-    readonly $container: Class;
-    readonly $type: 'Inheritance';
-    class?: Reference<Class>
-}
-
-export const Inheritance = 'Inheritance';
-
-export function isInheritance(item: unknown): item is Inheritance {
-    return reflection.isInstance(item, Inheritance);
-}
-
 export interface Umlmodel extends AstNode {
     readonly $type: 'Umlmodel';
     classes: Array<Class>
@@ -86,7 +74,6 @@ export interface UmlAstType {
     Class: Class
     DataType: DataType
     Feature: Feature
-    Inheritance: Inheritance
     Type: Type
     Umlmodel: Umlmodel
 }
@@ -94,7 +81,7 @@ export interface UmlAstType {
 export class UmlAstReflection extends AbstractAstReflection {
 
     getAllTypes(): string[] {
-        return ['Class', 'DataType', 'Feature', 'Inheritance', 'Type', 'Umlmodel'];
+        return ['Class', 'DataType', 'Feature', 'Type', 'Umlmodel'];
     }
 
     protected override computeIsSubtype(subtype: string, supertype: string): boolean {
@@ -112,11 +99,11 @@ export class UmlAstReflection extends AbstractAstReflection {
     getReferenceType(refInfo: ReferenceInfo): string {
         const referenceId = `${refInfo.container.$type}:${refInfo.property}`;
         switch (referenceId) {
+            case 'Class:superType': {
+                return Class;
+            }
             case 'Feature:type': {
                 return Type;
-            }
-            case 'Inheritance:class': {
-                return Class;
             }
             default: {
                 throw new Error(`${referenceId} is not a valid reference id.`);
@@ -130,8 +117,7 @@ export class UmlAstReflection extends AbstractAstReflection {
                 return {
                     name: 'Class',
                     mandatory: [
-                        { name: 'features', type: 'array' },
-                        { name: 'inheritance', type: 'array' }
+                        { name: 'features', type: 'array' }
                     ]
                 };
             }
