@@ -21,7 +21,7 @@ program
     .option('-d, --destination <dir>', 'destination directory of generating')
     .option('-r, --root <dir>', 'source root folder')
     .option('-q, --quiet', 'whether the program should print something', false)
-    .description('generates Java classes by Entity description')
+    .description('generates Java classes by Class description')
     .action(generateAction);
 
 program.parse(process.argv);

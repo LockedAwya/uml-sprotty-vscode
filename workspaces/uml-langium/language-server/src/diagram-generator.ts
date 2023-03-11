@@ -1,6 +1,8 @@
 import { GeneratorContext, LangiumDiagramGenerator } from 'langium-sprotty';
-import { SEdge, SLabel, SModelRoot, SNode, SPort } from 'sprotty-protocol';
-import { Class, Inheritance, Umlmodel } from './generated/ast';
+import { SEdge, SLabel, SModelRoot, SNode, SModelElement } from 'sprotty-protocol';
+import { Class, Inheritance, Umlmodel, Feature } from './generated/ast';
+//import { features } from 'process';
+//import { Expandable } from 'sprotty';
 //import { Reference } from 'langium';
 // import { SEdge, SLabel, SModelRoot, SNode, SPort } from 'sprotty-protocol';
 // import { Class, Umlmodel } from './generated/ast';
@@ -32,24 +34,41 @@ export class UMLDiagramGenerator extends LangiumDiagramGenerator {
         };
     }
 
+    protected generateSLabel(index: number, feature: Feature) {
+        return <SLabel>{
+            type: 'label',
+            id: index.toString(),
+            text: feature.name
+            //layout: 'stack',
+            // layoutOptions: {
+            //     paddingTop: 20.0,
+            //     paddingBottom: 20.0,
+            //     paddingLeft: 20.0,
+            //     paddingRight: 20.0
+            // }
+        };
+    }
 
     protected generateNode(_class: Class, { idCache }: GeneratorContext<Umlmodel>): SNode {
         const nodeId = idCache.uniqueId(_class.name, _class);
+        let arr: Array<SModelElement | SLabel> = [];
+        arr.push(<SLabel>{
+            type: 'label',
+            id: idCache.uniqueId(nodeId + '.label'),
+            text: _class.name
+        })
+        for (let i = 0; i < _class.features.length; i++) {
+            arr.push(<SLabel>{
+                type: 'label',
+                id: idCache.uniqueId(nodeId + '.label'),
+                text: _class.features[i].name + ":" + " " + _class.features[i].type.$refText
+            })
+        }
         return {
             type: 'node',
             id: nodeId,
-            children: [
-                <SLabel>{
-                    type: 'label',
-                    id: idCache.uniqueId(nodeId + '.label'),
-                    text: _class.name
-                },
-                <SPort>{
-                    type: 'port',
-                    id: idCache.uniqueId(nodeId + '.newTransition')
-                }
-            ],
-            layout: 'stack',
+            layout: 'vbox',
+            children: arr,
             layoutOptions: {
                 paddingTop: 10.0,
                 paddingBottom: 50.0,

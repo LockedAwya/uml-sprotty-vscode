@@ -29,7 +29,7 @@
             {
                 "language": "uml",
                 "scopeName": "source.umodel",
-                "path": "./syntaxes/umodel.tmLanguage.json"
+                "path": "../language-server/syntaxes/umodel.tmLanguage.json"
             }
         ],
         "customEditors": [

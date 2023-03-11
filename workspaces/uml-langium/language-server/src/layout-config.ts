@@ -37,7 +37,7 @@ export class UmlLayoutConfigurator extends DefaultLayoutConfigurator {
 
     protected override portOptions(sport: SPort, index: SModelIndex): LayoutOptions {
         return {
-            'org.eclipse.elk.port.side': 'EAST',
+            'org.eclipse.elk.port.side': 'WEST',
             'org.eclipse.elk.port.borderOffset': '3.0'
         };
     }

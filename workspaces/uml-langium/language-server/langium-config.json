@@ -3,12 +3,12 @@
     "languages": [
         {
             "id": "uml",
-            "grammar": "src/uml.langium",
+            "grammar": "./src/uml.langium",
             "fileExtensions": [
                 ".umodel"
             ],
             "textMate": {
-                "out": "../extension/syntaxes/umodel.tmLanguage.json"
+                "out": "./syntaxes/umodel.tmLanguage.json"
             }
         }
     ],
