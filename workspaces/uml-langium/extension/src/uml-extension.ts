@@ -34,7 +34,7 @@ export function activate(context: vscode.ExtensionContext) {
         // Set up webview panel manager for freestyle webviews
         const webviewPanelManager = new LspWebviewPanelManager({
             extensionUri: context.extensionUri,
-            defaultDiagramType: 'states',
+            defaultDiagramType: 'uml',
             languageClient,
             supportedFileExtensions: ['.umodel']
         });
@@ -50,11 +50,11 @@ export function activate(context: vscode.ExtensionContext) {
             supportedFileExtensions: ['.umodel']
         });
         context.subscriptions.push(
-            vscode.window.registerCustomEditorProvider('states', webviewEditorProvider, {
+            vscode.window.registerCustomEditorProvider('uml', webviewEditorProvider, {
                 webviewOptions: { retainContextWhenHidden: true }
             })
         );
-        registerDefaultCommands(webviewEditorProvider, context, { extensionPrefix: 'states' });
+        registerDefaultCommands(webviewEditorProvider, context, { extensionPrefix: 'uml' });
     }
 
     if (diagramMode === 'view') {

@@ -15,11 +15,16 @@ import { createStatesServices } from '../../uml-langium/language-server/src/uml-
 import { UmlDiagramLanguageMetaData } from '../../uml-langium/language-server/src/generated/module';
 import { NodeFileSystem } from 'langium/node';
 
+export type GenerateOptions = {
+    destination?: string;
+    root?: string;
+    quiet: boolean;
+}
+
 export const generateAction = async (fileName: string, opts: GenerateOptions): Promise<void> => {
     try {
         const services = createStatesServices(NodeFileSystem).states;
         await setRootFolder(fileName, services, opts.root);
-        //this code gets error?
         const umlmodel = await extractAstNode<Umlmodel>(fileName, UmlDiagramLanguageMetaData.fileExtensions, services);
         const generatedDirPath = generateJava(umlmodel, fileName, opts.destination);
         if (!opts.quiet) {
@@ -31,12 +36,6 @@ export const generateAction = async (fileName: string, opts: GenerateOptions): P
         }
     }
 };
-
-export type GenerateOptions = {
-    destination?: string;
-    root?: string;
-    quiet: boolean;
-}
 
 export function generateJava(umlmodel: Umlmodel, fileName: string, destination?: string): string {
     const data = extractDestinationAndName(fileName, destination);

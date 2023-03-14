@@ -28,8 +28,8 @@
         "grammars": [
             {
                 "language": "uml",
-                "scopeName": "source.umodel",
-                "path": "../language-server/syntaxes/umodel.tmLanguage.json"
+                "scopeName": "source.uml",
+                "path": "./umodel.tmLanguage.json"
             }
         ],
         "customEditors": [

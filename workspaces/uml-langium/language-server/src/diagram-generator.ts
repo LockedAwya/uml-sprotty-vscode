@@ -1,6 +1,6 @@
 import { GeneratorContext, LangiumDiagramGenerator } from 'langium-sprotty';
 import { SEdge, SLabel, SModelRoot, SNode, SModelElement } from 'sprotty-protocol';
-import { Class, Inheritance, Umlmodel, Feature } from './generated/ast';
+import { Class, Inheritance, Umlmodel } from './generated/ast';
 //import { features } from 'process';
 //import { Expandable } from 'sprotty';
 //import { Reference } from 'langium';
@@ -31,21 +31,6 @@ export class UMLDiagramGenerator extends LangiumDiagramGenerator {
                 //...arr.map(t => this.generateEdge(t, args))
                 //...model.classes.flatMap(m => m.superType?.ref).map(t => this.generateEdge(t, args))
             ]
-        };
-    }
-
-    protected generateSLabel(index: number, feature: Feature) {
-        return <SLabel>{
-            type: 'label',
-            id: index.toString(),
-            text: feature.name
-            //layout: 'stack',
-            // layoutOptions: {
-            //     paddingTop: 20.0,
-            //     paddingBottom: 20.0,
-            //     paddingLeft: 20.0,
-            //     paddingRight: 20.0
-            // }
         };
     }
 

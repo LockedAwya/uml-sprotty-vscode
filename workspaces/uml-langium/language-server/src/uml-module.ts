@@ -21,7 +21,7 @@ import { DefaultElementFilter, ElkFactory, ElkLayoutEngine, IElementFilter, ILay
 import { UMLDiagramGenerator } from './diagram-generator';
 import { UmlDiagramGeneratedModule, UmlGeneratedSharedModule } from './generated/module';
 import { UmlLayoutConfigurator } from './layout-config';
-import { registerValidationChecks, UMLValidator } from './states-validator';
+import { registerValidationChecks, UMLValidator } from './uml-validator';
 
 /**
  * Declaration of custom services - add your own service classes here.
@@ -44,7 +44,7 @@ export type UmlAddedServices = {
 export type UmlServices = LangiumSprottyServices & UmlAddedServices
 
 /**
- * Dependency injection module that overrides Langium default services and contributes the
+ * Dependency injection module that overrides Langium default services and  the
  * declared custom services. The Langium defaults can be partially specified to override only
  * selected services, while the custom services must be fully specified.
  */
@@ -78,7 +78,7 @@ export const UmlModule: Module<UmlServices, PartialLangiumServices & SprottyDiag
  * @param context Optional module context with the LSP connection
  * @returns An object wrapping the shared services and the language-specific services
  */
-export function createStatesServices(context: DefaultSharedModuleContext): { shared: LangiumSprottySharedServices, states: UmlServices } {
+export function createUMLServices(context: DefaultSharedModuleContext): { shared: LangiumSprottySharedServices, states: UmlServices } {
     const shared = inject(
         createDefaultSharedModule(context),
         UmlGeneratedSharedModule,

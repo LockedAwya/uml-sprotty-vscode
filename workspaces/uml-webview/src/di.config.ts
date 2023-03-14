@@ -23,7 +23,7 @@ import {
     HtmlRootView, LogLevel, ManhattanEdgeRouter, overrideViewerOptions, PreRenderedElement,
     PreRenderedView, RectangularNodeView, SGraphView, SLabelView, SModelRoot,
     SRoutingHandle, SRoutingHandleView, TYPES, loadDefaultModules, SGraph, SLabel,
-    hoverFeedbackFeature, popupFeature, creatingOnDragFeature, editLabelFeature, labelEditUiModule
+    hoverFeedbackFeature, popupFeature, creatingOnDragFeature, editLabelFeature, labelEditUiModule, editFeature
 } from 'sprotty';
 import { CustomRouter } from './custom-edge-router';
 import { CreateTransitionPort, StatesEdge, StatesNode } from './model';

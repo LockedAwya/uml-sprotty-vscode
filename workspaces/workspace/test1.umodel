@@ -1,14 +1,14 @@
 model test
 
 datatype String
+
+class HasAuthor {
+    author: String
+}
  
 class Blog {
     title: String
     many posts: Post
-}
- 
-class HasAuthor {
-    author: String
 }
  
 class Post extends HasAuthor {

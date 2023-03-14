@@ -21,30 +21,30 @@
 }
 
 .sprotty-edge {
-    fill:none;
+    fill: none;
     stroke: var(--vscode-editorActiveLineNumber-foreground);
-    stroke-width: 2px;
+    stroke-width: 10px;
 }
 
 .sprotty-edge-arrow {
-    fill:var(--vscode-editorActiveLineNumber-foreground);
+    fill: var(--vscode-editorActiveLineNumber-foreground);
 }
 
-.sprotty-edge > .sprotty-routing-handle {
+.sprotty-edge>.sprotty-routing-handle {
     fill: var(--vscode-editor-selectionBackground);
     stroke: none;
     z-index: 1000;
 }
 
-.sprotty-edge > .sprotty-routing-handle[data-kind='line'] {
+.sprotty-edge>.sprotty-routing-handle[data-kind='line'] {
     opacity: 0.35;
 }
 
-.sprotty-edge > .sprotty-routing-handle.selected {
+.sprotty-edge>.sprotty-routing-handle.selected {
     fill: var(--vscode-editor-selectionHighlightBackground);
 }
 
-.sprotty-edge > .sprotty-routing-handle.mouseover {
+.sprotty-edge>.sprotty-routing-handle.mouseover {
     stroke: var(--vscode-editor-symbolHighlightBackground);
     stroke-width: 1;
 }
