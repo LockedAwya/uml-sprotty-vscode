@@ -1,8 +1,8 @@
 {
-	"extends": "../../configs/base.tsconfig.json",
-	"compilerOptions": {
+  "extends": "../../configs/base.tsconfig.json",
+  "compilerOptions": {
     "jsx": "react",
-    "rootDir": "src",
+    //"rootDir": "src",
     "outDir": "out",
     "lib": [
       "es6",
@@ -12,6 +12,6 @@
     "declarationMap": false
   },
   "include": [
-    "src"
+    "src",
   ]
 }

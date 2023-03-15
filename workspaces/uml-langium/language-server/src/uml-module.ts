@@ -35,7 +35,7 @@ export type UmlAddedServices = {
         ElementFilter: IElementFilter,
         LayoutConfigurator: ILayoutConfigurator
     }
-}
+};
 
 /**
  * Union of Langium default services and your custom services - use this as constructor parameter

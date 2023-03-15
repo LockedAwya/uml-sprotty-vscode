@@ -20,31 +20,41 @@ import 'sprotty/css/sprotty.css';
 import { Container, ContainerModule } from 'inversify';
 import {
     configureCommand, configureModelElement, ConsoleLogger, CreateElementCommand, HtmlRoot,
-    HtmlRootView, LogLevel, ManhattanEdgeRouter, overrideViewerOptions, PreRenderedElement,
-    PreRenderedView, RectangularNodeView, SGraphView, SLabelView, SModelRoot,
+    HtmlRootView, LogLevel, overrideViewerOptions, PreRenderedElement,
+    PreRenderedView, SGraphView, SLabelView, SModelRoot,
     SRoutingHandle, SRoutingHandleView, TYPES, loadDefaultModules, SGraph, SLabel,
-    hoverFeedbackFeature, popupFeature, creatingOnDragFeature, editLabelFeature, labelEditUiModule, editFeature
+    hoverFeedbackFeature, popupFeature, creatingOnDragFeature, editLabelFeature, labelEditUiModule,
+    SCompartment, SCompartmentView, SButton, ExpandButtonView, expandFeature, nameFeature, withEditLabelFeature
 } from 'sprotty';
-import { CustomRouter } from './custom-edge-router';
-import { CreateTransitionPort, StatesEdge, StatesNode } from './model';
-import { PolylineArrowEdgeView, TriangleButtonView } from './views';
+//import { PolylineArrowEdgeView, TriangleButtonView } from './views';
+import { CreateTransitionPort, ClassNode, Icon, StatesEdge } from './model';
+//import { TriangleButtonView } from './views';
+import { PolylineArrowEdgeView, IconView, NodeView, TriangleButtonView } from "./views";
 
-const statesDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => {
+const ClassDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) => {
     rebind(TYPES.ILogger).to(ConsoleLogger).inSingletonScope();
     rebind(TYPES.LogLevel).toConstantValue(LogLevel.warn);
-    rebind(ManhattanEdgeRouter).to(CustomRouter).inSingletonScope();
+    //rebind(ManhattanEdgeRouter).to(CustomRouter).inSingletonScope();
 
     const context = { bind, unbind, isBound, rebind };
     configureModelElement(context, 'graph', SGraph, SGraphView, {
         enable: [hoverFeedbackFeature, popupFeature]
     });
-    configureModelElement(context, 'node', StatesNode, RectangularNodeView);
+    //configureModelElement(context, 'node:class', StatesNode, RectangularNodeView);
+    configureModelElement(context, 'node:class', ClassNode, NodeView, {
+        enable: [expandFeature, nameFeature, withEditLabelFeature]
+    });
     configureModelElement(context, 'label', SLabel, SLabelView, {
         enable: [editLabelFeature]
     });
     configureModelElement(context, 'label:xref', SLabel, SLabelView, {
         enable: [editLabelFeature]
     });
+    configureModelElement(context, 'comp:header', SCompartment, SCompartmentView);
+    configureModelElement(context, 'label:heading', SLabel, SLabelView, {
+        enable: [editLabelFeature]
+    });
+    configureModelElement(context, 'icon', Icon, IconView);
     configureModelElement(context, 'edge', StatesEdge, PolylineArrowEdgeView);
     configureModelElement(context, 'html', HtmlRoot, HtmlRootView);
     configureModelElement(context, 'pre-rendered', PreRenderedElement, PreRenderedView);
@@ -54,14 +64,15 @@ const statesDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) 
     configureModelElement(context, 'port', CreateTransitionPort, TriangleButtonView, {
         enable: [popupFeature, creatingOnDragFeature]
     });
+    configureModelElement(context, 'button:expand', SButton, ExpandButtonView);
 
     configureCommand(context, CreateElementCommand);
 });
 
-export function createStateDiagramContainer(widgetId: string): Container {
+export function createClassDiagramContainer(widgetId: string): Container {
     const container = new Container();
-    loadDefaultModules(container, { exclude: [ labelEditUiModule ] });
-    container.load(statesDiagramModule);
+    loadDefaultModules(container, { exclude: [labelEditUiModule] });
+    container.load(ClassDiagramModule);
     overrideViewerOptions(container, {
         needsClientLayout: true,
         needsServerLayout: true,

@@ -11,7 +11,7 @@ import _ from 'lodash';
 import { CompositeGeneratorNode, IndentNode, NL, toString } from 'langium';
 import { Umlmodel, Feature, Class, isClass, Type } from '../../uml-langium/language-server/src/generated/ast';
 import { extractAstNode, extractDestinationAndName, setRootFolder } from './cli-util';
-import { createStatesServices } from '../../uml-langium/language-server/src/uml-module';
+import { createUMLServices } from '../../uml-langium/language-server/src/uml-module';
 import { UmlDiagramLanguageMetaData } from '../../uml-langium/language-server/src/generated/module';
 import { NodeFileSystem } from 'langium/node';
 
@@ -23,7 +23,7 @@ export type GenerateOptions = {
 
 export const generateAction = async (fileName: string, opts: GenerateOptions): Promise<void> => {
     try {
-        const services = createStatesServices(NodeFileSystem).states;
+        const services = createUMLServices(NodeFileSystem).states;
         await setRootFolder(fileName, services, opts.root);
         const umlmodel = await extractAstNode<Umlmodel>(fileName, UmlDiagramLanguageMetaData.fileExtensions, services);
         const generatedDirPath = generateJava(umlmodel, fileName, opts.destination);

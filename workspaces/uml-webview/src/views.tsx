@@ -17,8 +17,9 @@
 /** @jsx svg */
 import { injectable } from 'inversify';
 import { VNode } from 'snabbdom';
-import { PolylineEdgeView, RenderingContext, SEdge, svg, IView, SPort } from 'sprotty';
+import { PolylineEdgeView, RenderingContext, SEdge, svg, IView, SPort, RectangularNodeView, SNode, IViewArgs } from 'sprotty';
 import { Point, toDegrees } from 'sprotty-protocol';
+import { Icon } from './model';
 
 @injectable()
 export class PolylineArrowEdgeView extends PolylineEdgeView {
@@ -28,7 +29,7 @@ export class PolylineArrowEdgeView extends PolylineEdgeView {
         const p2 = segments[segments.length - 1];
         return [
             <path class-sprotty-edge-arrow={true} d='M 6,-3 L 0,0 L 6,3 Z'
-                  transform={`rotate(${this.angle(p2, p1)} ${p2.x} ${p2.y}) translate(${p2.x} ${p2.y})`}/>
+                transform={`rotate(${this.angle(p2, p1)} ${p2.x} ${p2.y}) translate(${p2.x} ${p2.y})`} />
         ];
     }
 
@@ -41,6 +42,39 @@ export class PolylineArrowEdgeView extends PolylineEdgeView {
 export class TriangleButtonView implements IView {
     render(model: SPort, context: RenderingContext): VNode {
         return <path class-sprotty-button={true} d='M 0,0 L 8,4 L 0,8 Z' />;
+    }
+}
+
+@injectable()
+export class NodeView extends RectangularNodeView {
+    override render(node: Readonly<SNode>, context: RenderingContext, args?: IViewArgs): VNode | undefined {
+        if (!this.isVisible(node, context)) {
+            return undefined;
+        }
+        return <g>
+            <rect class-sprotty-node={true}
+                class-node-package={node.type === 'node:package'}
+                class-node-class={node.type === 'node:class'}
+                class-mouseover={node.hoverFeedback} class-selected={node.selected}
+                x="0" y="0" width={Math.max(node.size.width, 0)} height={Math.max(node.size.height, 0)}></rect>
+            {context.renderChildren(node)}
+        </g>;
+    }
+}
+
+@injectable()
+export class IconView implements IView {
+
+    render(element: Icon, context: RenderingContext, args?: IViewArgs): VNode {
+        const radius = this.getRadius();
+        return <g>
+            <circle class-sprotty-icon={true} r={radius} cx={radius} cy={radius}></circle>
+            {context.renderChildren(element)}
+        </g>;
+    }
+
+    getRadius() {
+        return 16;
     }
 }
 

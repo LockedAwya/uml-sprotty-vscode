@@ -6,9 +6,9 @@
         "downlevelIteration": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
-        "target": "ES2017",
+        "target": "ES2019",
         "lib": [
-            "ES2017"
+            "ES2019"
         ],
         "module": "commonjs",
         "moduleResolution": "node",

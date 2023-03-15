@@ -18,13 +18,13 @@ import { startLanguageServer } from 'langium';
 import { NodeFileSystem } from 'langium/node';
 import { addDiagramHandler } from 'langium-sprotty';
 import { createConnection, ProposedFeatures } from 'vscode-languageserver/node';
-import { createStatesServices } from './uml-module';
+import { createUMLServices } from './uml-module';
 
 // Create a connection to the client
 const connection = createConnection(ProposedFeatures.all);
 
 // Inject the language services
-const { shared } = createStatesServices({ connection, ...NodeFileSystem });
+const { shared } = createUMLServices({ connection, ...NodeFileSystem });
 
 // Start the language server with the language-specific services
 startLanguageServer(shared);

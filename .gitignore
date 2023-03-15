@@ -7,3 +7,4 @@ src-gen/
 *.vsix
 *.tgz
 .DS_Store
+packages/sprotty

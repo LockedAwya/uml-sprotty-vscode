@@ -1,7 +1,7 @@
 {
-	"extends": "../../../configs/base.tsconfig.json",
-	"compilerOptions": {
-    "target": "es2017",
+  "extends": "../../../configs/base.tsconfig.json",
+  "compilerOptions": {
+    "target": "es2019",
     "rootDir": "src",
     "outDir": "out",
     "lib": [
