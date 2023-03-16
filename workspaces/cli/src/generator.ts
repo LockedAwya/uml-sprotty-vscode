@@ -82,9 +82,14 @@ function generateInterface(_interface: Interface, fileNode: CompositeGeneratorNo
     //const maybeExtends = _interface.interfaceInheritance.length !== 0 ? ` extends ${_interface.interfaceInheritance[0].interface[0].$refText}` : '';
     let maybeExtends: string = "";
     if (_interface.interfaceInheritance.length !== 0) {
-        maybeExtends += " extends ".toString();
-        for (let i = 0; i < _interface.interfaceInheritance.length; i++) {
-            maybeExtends += _interface.interfaceInheritance[0].interface[i].$refText.toString() + " ".toString();
+        maybeExtends += " extends".toString();
+        for (let i = 0; i < _interface.interfaceInheritance[0].interface.length; i++) {
+            //maybeExtends += _interface.interfaceInheritance[0].interface[i].$refText.toString() + " ".toString();
+            if (i == _interface.interfaceInheritance[0].interface.length - 1) {
+                maybeExtends += " ".toString() + _interface.interfaceInheritance[0].interface[i].$refText.toString() + " ".toString();
+            } else {
+                maybeExtends += " ".toString() + _interface.interfaceInheritance[0].interface[i].$refText.toString() + ",".toString();
+            }
         }
     }
     fileNode.append(`interface ${_interface.name}${maybeExtends}{`, NL);
@@ -98,7 +103,18 @@ function generateInterface(_interface: Interface, fileNode: CompositeGeneratorNo
 function generateClass(_class: Class, fileNode: CompositeGeneratorNode): void {
     //const maybeExtends = _class.superType ? ` extends ${_class.superType.$refText}` : '';
     const maybeExtends = _class.inheritance.length !== 0 ? ` extends ${_class.inheritance[0].class.$refText}` : '';
-    fileNode.append(`class ${_class.name}${maybeExtends} {`, NL);
+    let maybeImplements: string = "";
+    if (_class.Implementation.length !== 0) {
+        maybeImplements += " implements".toString();
+        for (let i = 0; i < _class.Implementation[0].interface.length; ++i) {
+            if (i == _class.Implementation[0].interface.length - 1) {
+                maybeImplements += " ".toString() + _class.Implementation[0].interface[i].$refText.toString();
+            } else {
+                maybeImplements += " ".toString() + _class.Implementation[0].interface[i].$refText.toString() + ",".toString();
+            }
+        }
+    }
+    fileNode.append(`class ${_class.name}${maybeExtends}${maybeImplements} {`, NL);
     fileNode.indent(classBody => {
         const featureData = _class.features.map(f => generateFeature(f, classBody));
         featureData.forEach(([generateField, ,]) => generateField());
@@ -108,9 +124,18 @@ function generateClass(_class: Class, fileNode: CompositeGeneratorNode): void {
 }
 
 function generateFeatureForInterface(feature: Feature, interfaceBody: IndentNode): [() => void] {
-    const name = feature.name;
-    const type = feature.type.$refText + (feature.many ? '[]' : '');
+    let name = feature.name;
+    let type = feature.type.$refText;
+    //+ (feature.many ? '[]' : '');
 
+    if (feature.many) {
+        type += '[]'.toString();
+    } else {
+        if (type.startsWith("void")) {
+            name += '()'.toString();
+        }
+        type += ''.toString();
+    }
     return [
         () => { // generate the field
             interfaceBody.append(`${type} ${name};`, NL);

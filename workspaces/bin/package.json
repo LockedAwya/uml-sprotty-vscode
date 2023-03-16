@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "script to generate files",
   "private": true,
+  "dependencies": {
+    "cli-langium": "^1.0.0"
+  },
   "devDependencies": {},
   "scripts": {
     "prepare": "node cli generate ../workspace/test1.umodel",

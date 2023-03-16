@@ -1,6 +1,6 @@
 package test1;
 
-class Post extends HasAuthor implements Test1, Test2, Test3 {
+class Post extends HasAuthor {
     private String title;
     private String content;
     private Comment[] comments;

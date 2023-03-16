@@ -2,15 +2,20 @@ model test
 
 datatype String
 datatype Int
+datatype void
 
 interface Test1 {
     title: String
+    foo: void
 }
 interface Test2 {
     title: String
 }
 
-interface Test extends Test1 {
+interface Test3 {
+    title3: String
+}
+interface Test extends Test1 Test2 Test3 {
     test: String
 }
 
@@ -23,7 +28,7 @@ class Blog {
     many posts: Post
 }
 
-class Post extends HasAuthor implements Test1 Test2 {
+class Post extends HasAuthor implements Test1 Test2 Test3 {
     title: String
     content: String
     many comments: Comment

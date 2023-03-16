@@ -39,7 +39,7 @@ Inheritance:
 
 //an interface can extend any number of other interfaces
 InterfaceInheritance:
-    'extends' interface+=[Interface];
+    'extends' (interface+=[Interface])+;
 
 Feature:
     (many?='many')? name=ID ':' type=[Type:QualifiedName];

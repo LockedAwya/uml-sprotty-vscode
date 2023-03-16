@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "generating java file from dsl",
   "private": true,
+  "dependencies": {
+    "uml-language-server": "^0.5.0"
+  },
   "devDependencies": {},
   "scripts": {
     "specify-path": "..//bin//cli generate ..//workspace//test1.umodel",

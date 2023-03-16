@@ -392,7 +392,8 @@ export const UmlDiagramGrammar = (): Grammar => loadedUmlDiagramGrammar ?? (load
                 "$ref": "#/rules@4"
               },
               "deprecatedSyntax": false
-            }
+            },
+            "cardinality": "+"
           }
         ]
       },
