@@ -19,7 +19,9 @@ export function isType(item: unknown): item is Type {
 export interface Class extends AstNode {
     readonly $container: Umlmodel;
     readonly $type: 'Class';
+    abstract: boolean
     features: Array<Feature>
+    Implementation: Array<Implementation>
     inheritance: Array<Inheritance>
     name: string
 }
@@ -43,7 +45,7 @@ export function isDataType(item: unknown): item is DataType {
 }
 
 export interface Feature extends AstNode {
-    readonly $container: Class;
+    readonly $container: Class | Interface;
     readonly $type: 'Feature';
     many: boolean
     name: string
@@ -54,6 +56,18 @@ export const Feature = 'Feature';
 
 export function isFeature(item: unknown): item is Feature {
     return reflection.isInstance(item, Feature);
+}
+
+export interface Implementation extends AstNode {
+    readonly $container: Class;
+    readonly $type: 'Implementation';
+    interface: Array<Reference<Interface>>
+}
+
+export const Implementation = 'Implementation';
+
+export function isImplementation(item: unknown): item is Implementation {
+    return reflection.isInstance(item, Implementation);
 }
 
 export interface Inheritance extends AstNode {
@@ -68,10 +82,37 @@ export function isInheritance(item: unknown): item is Inheritance {
     return reflection.isInstance(item, Inheritance);
 }
 
+export interface Interface extends AstNode {
+    readonly $container: Umlmodel;
+    readonly $type: 'Interface';
+    features: Array<Feature>
+    interfaceInheritance: Array<InterfaceInheritance>
+    name: string
+}
+
+export const Interface = 'Interface';
+
+export function isInterface(item: unknown): item is Interface {
+    return reflection.isInstance(item, Interface);
+}
+
+export interface InterfaceInheritance extends AstNode {
+    readonly $container: Interface;
+    readonly $type: 'InterfaceInheritance';
+    interface: Array<Reference<Interface>>
+}
+
+export const InterfaceInheritance = 'InterfaceInheritance';
+
+export function isInterfaceInheritance(item: unknown): item is InterfaceInheritance {
+    return reflection.isInstance(item, InterfaceInheritance);
+}
+
 export interface Umlmodel extends AstNode {
     readonly $type: 'Umlmodel';
     classes: Array<Class>
     datatypes: Array<DataType>
+    interfaces: Array<Interface>
     name: string
     types: Array<Type>
 }
@@ -86,7 +127,10 @@ export interface UmlAstType {
     Class: Class
     DataType: DataType
     Feature: Feature
+    Implementation: Implementation
     Inheritance: Inheritance
+    Interface: Interface
+    InterfaceInheritance: InterfaceInheritance
     Type: Type
     Umlmodel: Umlmodel
 }
@@ -94,7 +138,7 @@ export interface UmlAstType {
 export class UmlAstReflection extends AbstractAstReflection {
 
     getAllTypes(): string[] {
-        return ['Class', 'DataType', 'Feature', 'Inheritance', 'Type', 'Umlmodel'];
+        return ['Class', 'DataType', 'Feature', 'Implementation', 'Inheritance', 'Interface', 'InterfaceInheritance', 'Type', 'Umlmodel'];
     }
 
     protected override computeIsSubtype(subtype: string, supertype: string): boolean {
@@ -115,6 +159,10 @@ export class UmlAstReflection extends AbstractAstReflection {
             case 'Feature:type': {
                 return Type;
             }
+            case 'Implementation:interface':
+            case 'InterfaceInheritance:interface': {
+                return Interface;
+            }
             case 'Inheritance:class': {
                 return Class;
             }
@@ -130,7 +178,9 @@ export class UmlAstReflection extends AbstractAstReflection {
                 return {
                     name: 'Class',
                     mandatory: [
+                        { name: 'abstract', type: 'boolean' },
                         { name: 'features', type: 'array' },
+                        { name: 'Implementation', type: 'array' },
                         { name: 'inheritance', type: 'array' }
                     ]
                 };
@@ -143,12 +193,38 @@ export class UmlAstReflection extends AbstractAstReflection {
                     ]
                 };
             }
+            case 'Implementation': {
+                return {
+                    name: 'Implementation',
+                    mandatory: [
+                        { name: 'interface', type: 'array' }
+                    ]
+                };
+            }
+            case 'Interface': {
+                return {
+                    name: 'Interface',
+                    mandatory: [
+                        { name: 'features', type: 'array' },
+                        { name: 'interfaceInheritance', type: 'array' }
+                    ]
+                };
+            }
+            case 'InterfaceInheritance': {
+                return {
+                    name: 'InterfaceInheritance',
+                    mandatory: [
+                        { name: 'interface', type: 'array' }
+                    ]
+                };
+            }
             case 'Umlmodel': {
                 return {
                     name: 'Umlmodel',
                     mandatory: [
                         { name: 'classes', type: 'array' },
                         { name: 'datatypes', type: 'array' },
+                        { name: 'interfaces', type: 'array' },
                         { name: 'types', type: 'array' }
                     ]
                 };

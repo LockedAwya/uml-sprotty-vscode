@@ -54,6 +54,7 @@ const ClassDiagramModule = new ContainerModule((bind, unbind, isBound, rebind) =
     configureModelElement(context, 'label:heading', SLabel, SLabelView, {
         enable: [editLabelFeature]
     });
+    configureModelElement(context, 'label:icon', SLabel, SLabelView);
     configureModelElement(context, 'icon', Icon, IconView);
     configureModelElement(context, 'edge', StatesEdge, PolylineArrowEdgeView);
     configureModelElement(context, 'html', HtmlRoot, HtmlRootView);

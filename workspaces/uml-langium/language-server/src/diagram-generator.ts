@@ -48,6 +48,17 @@ export class UMLDiagramGenerator extends LangiumDiagramGenerator {
 
     protected generateNode(_class: Class, { idCache }: GeneratorContext<Umlmodel>): SNode & Expandable {
         const nodeId = idCache.uniqueId(_class.name, _class);
+        //let arr: Array<SModelElement | SLabel> = [];
+        //generate attributes of a class
+        // for (let i = 0; i < _class.features.length; i++) {
+        //     // const featureName = _class.features[i].name + ":" + " " + _class.features[i].type.$refText;
+        //     // arr.push(this.generateFeature(featureName, nodeId));
+        //     arr.push(<SLabel>{
+        //         type: 'label',
+        //         id: idCache.uniqueId(nodeId + '.label'),
+        //         text: _class.features[i].name + ":" + " " + _class.features[i].type.$refText
+        //     })
+        // }
         return {
             type: 'node:class',
             id: nodeId,
@@ -59,22 +70,22 @@ export class UMLDiagramGenerator extends LangiumDiagramGenerator {
                     type: 'comp:header',
                     layout: 'hbox',
                     children: [
-                        // {
-                        //     id: nodeId + '_icon',
-                        //     type: 'icon',
-                        //     layout: 'stack',
-                        //     layoutOptions: {
-                        //         hAlign: 'center',
-                        //         resizeContainer: false
-                        //     },
-                        //     children: [
-                        //         <SLabel>{
-                        //             id: nodeId + '_ticon',
-                        //             type: 'label:icon',
-                        //             text: 'C'
-                        //         }
-                        //     ]
-                        // },
+                        {
+                            id: nodeId + '_icon',
+                            type: 'icon',
+                            layout: 'stack',
+                            layoutOptions: {
+                                hAlign: 'center',
+                                resizeContainer: false
+                            },
+                            children: [
+                                <SLabel>{
+                                    id: nodeId + '_ticon',
+                                    type: 'label:icon',
+                                    text: 'C'
+                                }
+                            ]
+                        },
                         <SLabel>{
                             id: nodeId + '_classname',
                             type: 'label:heading',
@@ -83,16 +94,10 @@ export class UMLDiagramGenerator extends LangiumDiagramGenerator {
                         {
                             id: nodeId + '_expand',
                             type: 'button:expand'
-                        }
-                    ]
-                }
-            ]
-            // layoutOptions: {
-            //     paddingTop: 10.0,
-            //     paddingBottom: 50.0,
-            //     paddingLeft: 30.0,
-            //     paddingRight: 30.0
-            // }
+                        },
+                    ],
+                },
+            ],
         };
     }
 

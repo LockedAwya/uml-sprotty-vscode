@@ -9,7 +9,7 @@ import path from 'path';
 import chalk from 'chalk';
 import _ from 'lodash';
 import { CompositeGeneratorNode, IndentNode, NL, toString } from 'langium';
-import { Umlmodel, Feature, Class, isClass, Type } from '../../uml-langium/language-server/src/generated/ast';
+import { Umlmodel, Feature, Class, isClass, Type, Interface, isInterface } from '../../uml-langium/language-server/src/generated/ast';
 import { extractAstNode, extractDestinationAndName, setRootFolder } from './cli-util';
 import { createUMLServices } from '../../uml-langium/language-server/src/uml-module';
 import { UmlDiagramLanguageMetaData } from '../../uml-langium/language-server/src/generated/module';
@@ -26,9 +26,11 @@ export const generateAction = async (fileName: string, opts: GenerateOptions): P
         const services = createUMLServices(NodeFileSystem).states;
         await setRootFolder(fileName, services, opts.root);
         const umlmodel = await extractAstNode<Umlmodel>(fileName, UmlDiagramLanguageMetaData.fileExtensions, services);
-        const generatedDirPath = generateJava(umlmodel, fileName, opts.destination);
+        const generatedDirPath = generateJavaClasses(umlmodel, fileName, opts.destination);
+        const generateDirPath2 = generateJavaInterfaces(umlmodel, fileName, opts.destination);
         if (!opts.quiet) {
             console.log(chalk.green(`Java classes generated successfully: ${chalk.yellow(generatedDirPath)}`));
+            console.log(chalk.green(`Java interfaces generated successfully: ${chalk.yellow(generateDirPath2)}`));
         }
     } catch (error) {
         if (!opts.quiet) {
@@ -37,14 +39,19 @@ export const generateAction = async (fileName: string, opts: GenerateOptions): P
     }
 };
 
-export function generateJava(umlmodel: Umlmodel, fileName: string, destination?: string): string {
+export function generateJavaClasses(umlmodel: Umlmodel, fileName: string, destination?: string): string {
     const data = extractDestinationAndName(fileName, destination);
     return generateTypeElements(data.destination, umlmodel.classes, data.name);
 }
 
-function generateTypeElements(destination: string, elements: Array<Type | Class>, filePath: string): string {
+export function generateJavaInterfaces(umlmodel: Umlmodel, fileName: string, destination?: string): string {
+    const data = extractDestinationAndName(fileName, destination);
+    return generateTypeElements(data.destination, umlmodel.interfaces, data.name);
+}
 
-    function generateTypesInternal(elements: Array<Type | Class>, filePath: string): string {
+function generateTypeElements(destination: string, elements: Array<Type | Class | Interface>, filePath: string): string {
+
+    function generateTypesInternal(elements: Array<Type | Class | Interface>, filePath: string): string {
         const fullPath = path.join(destination, filePath);
         if (!fs.existsSync(fullPath)) {
             fs.mkdirSync(fullPath, { recursive: true });
@@ -52,18 +59,15 @@ function generateTypeElements(destination: string, elements: Array<Type | Class>
 
         const packagePath = filePath.replace(/\//g, '.').replace(/^\.+/, '');
         for (const elem of elements) {
-            //  if (isPackageDeclaration(elem)) {
-            //      generateAbstractElementsInternal(elem.elements, path.join(filePath, elem.name.replace(/\./g, '/')));
-            //  } else if (isClass(elem)) {
-            //      const fileNode = new CompositeGeneratorNode();
-            //      fileNode.append(`package ${packagePath};`, NL, NL);
-            //      generateClass(elem, fileNode);
-            //      fs.writeFileSync(path.join(fullPath, `${elem.name}.java`), toString(fileNode));
-            //  }
             if (isClass(elem)) {
                 const fileNode = new CompositeGeneratorNode();
                 fileNode.append(`package ${packagePath};`, NL, NL);
                 generateClass(elem, fileNode);
+                fs.writeFileSync(path.join(fullPath, `${elem.name}.java`), toString(fileNode));
+            } else if (isInterface(elem)) {
+                const fileNode = new CompositeGeneratorNode();
+                fileNode.append(`package ${packagePath};`, NL, NL);
+                generateInterface(elem, fileNode);
                 fs.writeFileSync(path.join(fullPath, `${elem.name}.java`), toString(fileNode));
             }
         }
@@ -73,16 +77,23 @@ function generateTypeElements(destination: string, elements: Array<Type | Class>
     return generateTypesInternal(elements, filePath);
 }
 
-// function generateClass(_class: Class, fileNode: CompositeGeneratorNode): void {
-//     const maybeExtends = _class ? ` extends ${_class.name}` : '';
-//     fileNode.append(`class ${_class.name}${maybeExtends} {`, NL);
-//     fileNode.indent(classBody => {
-//         const featureData = _class.features.map(f => generateFeature(f, classBody));
-//         featureData.forEach(([generateField, ,]) => generateField());
-//         featureData.forEach(([, generateSetter, generateGetter]) => { generateSetter(); generateGetter(); });
-//     });
-//     fileNode.append('}', NL);
-// }
+//TODO: generateInterface
+function generateInterface(_interface: Interface, fileNode: CompositeGeneratorNode): void {
+    //const maybeExtends = _interface.interfaceInheritance.length !== 0 ? ` extends ${_interface.interfaceInheritance[0].interface[0].$refText}` : '';
+    let maybeExtends: string = "";
+    if (_interface.interfaceInheritance.length !== 0) {
+        maybeExtends += " extends ".toString();
+        for (let i = 0; i < _interface.interfaceInheritance.length; i++) {
+            maybeExtends += _interface.interfaceInheritance[0].interface[i].$refText.toString() + " ".toString();
+        }
+    }
+    fileNode.append(`interface ${_interface.name}${maybeExtends}{`, NL);
+    fileNode.indent(interfaceBody => {
+        const featureData = _interface.features.map(f => generateFeatureForInterface(f, interfaceBody));
+        featureData.forEach(([generateField, ,]) => generateField());
+    });
+    fileNode.append('}', NL);
+}
 
 function generateClass(_class: Class, fileNode: CompositeGeneratorNode): void {
     //const maybeExtends = _class.superType ? ` extends ${_class.superType.$refText}` : '';
@@ -94,6 +105,17 @@ function generateClass(_class: Class, fileNode: CompositeGeneratorNode): void {
         featureData.forEach(([, generateSetter, generateGetter]) => { generateSetter(); generateGetter(); });
     });
     fileNode.append('}', NL);
+}
+
+function generateFeatureForInterface(feature: Feature, interfaceBody: IndentNode): [() => void] {
+    const name = feature.name;
+    const type = feature.type.$refText + (feature.many ? '[]' : '');
+
+    return [
+        () => { // generate the field
+            interfaceBody.append(`${type} ${name};`, NL);
+        }
+    ]
 }
 
 function generateFeature(feature: Feature, classBody: IndentNode): [() => void, () => void, () => void] {

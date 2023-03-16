@@ -10,7 +10,7 @@
     },
     {
       "name": "keyword.control.uml",
-      "match": "\\b(class|datatype|extends|many|model)\\b"
+      "match": "\\b(abstract|class|datatype|extends|implements|interface|many|model)\\b"
     },
     {
       "name": "string.quoted.double.uml",
