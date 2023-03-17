@@ -115,10 +115,13 @@ function generateClass(_class: Class, fileNode: CompositeGeneratorNode): void {
         }
     }
     fileNode.append(`class ${_class.name}${maybeExtends}${maybeImplements} {`, NL);
+    if (maybeImplements != "") {
+
+    }
     fileNode.indent(classBody => {
-        const featureData = _class.features.map(f => generateFeature(f, classBody));
+        const featureData = _class.features.map(f => generateFeatureForClass(f, classBody));
         featureData.forEach(([generateField, ,]) => generateField());
-        featureData.forEach(([, generateSetter, generateGetter]) => { generateSetter(); generateGetter(); });
+        featureData.forEach(([, generateSetter, generateGetter, generateMethod]) => { generateSetter(); generateGetter(); generateMethod() });
     });
     fileNode.append('}', NL);
 }
@@ -143,7 +146,7 @@ function generateFeatureForInterface(feature: Feature, interfaceBody: IndentNode
     ]
 }
 
-function generateFeature(feature: Feature, classBody: IndentNode): [() => void, () => void, () => void] {
+function generateFeatureForClass(feature: Feature, classBody: IndentNode): [() => void, () => void, () => void, () => void] {
     const name = feature.name;
     const type = feature.type.$refText + (feature.many ? '[]' : '');
 
@@ -166,6 +169,19 @@ function generateFeature(feature: Feature, classBody: IndentNode): [() => void, 
                 methodBody.append(`return ${name};`, NL);
             });
             classBody.append('}', NL);
+        },
+        () => { //generate the method
+            //TODO refactor
+            if (type.startsWith("void")) {
+                classBody.append(NL);
+                classBody.append(`public ${type} get${_.upperFirst(name)}() {`, NL);
+                classBody.indent(methodBody => {
+                    methodBody.append(`System.out.println("${name}");`, NL);
+                });
+                classBody.append('}', NL);
+            }
         }
     ];
 }
+
+

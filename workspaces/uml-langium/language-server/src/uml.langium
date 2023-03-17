@@ -9,7 +9,7 @@ entry Umlmodel:
 //     (classes+=Class | datatypes+=DataType | types+=Type)*;
 
 Type:
-    DataType | Class;
+    DataType | Class | Interface;
 
 DataType:
     'datatype' name=ID;
@@ -33,6 +33,12 @@ Interface:
 Implementation:
     'implements' (interface+=[Interface])+;
 
+ContainsParams:
+    '(' (param+=Param)*',' ')';
+
+Param:
+    (many?='many')? name=ID (containsParams+=ContainsParams)? ':' type=[Type:QualifiedName];
+
 //a class can extend only one another class
 Inheritance:
     'extends' class=[Class];
@@ -42,7 +48,7 @@ InterfaceInheritance:
     'extends' (interface+=[Interface])+;
 
 Feature:
-    (many?='many')? name=ID ':' type=[Type:QualifiedName];
+    (many?='many')? name=ID (ContainsParams)':' type=[Type:QualifiedName];
 
 QualifiedName returns string:
     ID ('.' ID)*;
