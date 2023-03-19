@@ -127,18 +127,19 @@ function generateClass(_class: Class, fileNode: CompositeGeneratorNode): void {
 function generateFeatureForInterface(feature: Feature, interfaceBody: IndentNode): [() => void] {
     let name = feature.name;
     let type = feature.type.$refText;
-    let maybeContainsParams = feature.params.length;
+    //let maybeContainsParams = feature.params.length;
+    let maybeMethod = feature.param;
 
     //generateParams
 
     if (feature.many) {
         type += '[]'.toString();
     } else {
-        if (maybeContainsParams != 0) {
+        if (maybeMethod) {
             //name += '()'.toString();
             name += '('
             for (let i = 0; i < feature.params.length; ++i) {
-                name += feature.params[i].type.$refText + ': ';
+                name += feature.params[i].type.$refText + ' ';
                 if (i == feature.params.length - 1) {
                     name += feature.params[i].name;
                     break;
@@ -146,8 +147,6 @@ function generateFeatureForInterface(feature: Feature, interfaceBody: IndentNode
                 name += feature.params[i].name + ', ';
             }
             name += ')'
-        } else {
-            name += '()';
         }
         type += ''.toString();
     }
@@ -197,7 +196,7 @@ function generateFeatureForClass(feature: Feature, classBody: IndentNode): [() =
                     //name += '()'.toString();
                     name += '('
                     for (let i = 0; i < feature.params.length; ++i) {
-                        name += feature.params[i].type.$refText + ': ';
+                        name += feature.params[i].type.$refText + ' ';
                         if (i == feature.params.length - 1) {
                             name += feature.params[i].name;
                             break;

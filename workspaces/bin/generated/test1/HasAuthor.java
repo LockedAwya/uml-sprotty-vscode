@@ -11,7 +11,7 @@ class HasAuthor {
         return author;
     }
 
-    public String func(String: test1, String: test2, String: test3) {
+    public String func(String test1, String test2, String test3) {
         return null;
     }
 
@@ -19,7 +19,7 @@ class HasAuthor {
         System.out.println("func1()");
     }
 
-    public void func2(String: test1) {
-        System.out.println("func2(String: test1)");
+    public void func2(String test1) {
+        System.out.println("func2(String test1)");
     }
 }
