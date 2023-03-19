@@ -6,8 +6,10 @@ datatype void
 
 interface Test1 {
     title: String
-    foo: void
+    foo(name: String name1: String): void
+    foo(): void
 }
+
 interface Test2 {
     title: String
 }
@@ -15,23 +17,28 @@ interface Test2 {
 interface Test3 {
     title3: String
 }
+
 interface Test extends Test1 Test2 Test3 {
     test: String
 }
 
 class HasAuthor {
     author: String
-}
-
-class Blog {
-    title: String
-    many posts: Post
+    func(test1: String test2: String test3: String): String
+    func1(): void
+    func2(test1: String): void
 }
 
 class Post extends HasAuthor implements Test1 Test2 Test3 {
     title: String
     content: String
     many comments: Comment
+    test: String
+}
+
+class Blog {
+    title: String
+    many posts: Post
 }
 
 class Comment extends HasAuthor {

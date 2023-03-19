@@ -79,7 +79,6 @@ function generateTypeElements(destination: string, elements: Array<Type | Class 
 
 //TODO: generateInterface
 function generateInterface(_interface: Interface, fileNode: CompositeGeneratorNode): void {
-    //const maybeExtends = _interface.interfaceInheritance.length !== 0 ? ` extends ${_interface.interfaceInheritance[0].interface[0].$refText}` : '';
     let maybeExtends: string = "";
     if (_interface.interfaceInheritance.length !== 0) {
         maybeExtends += " extends".toString();
@@ -101,7 +100,6 @@ function generateInterface(_interface: Interface, fileNode: CompositeGeneratorNo
 }
 
 function generateClass(_class: Class, fileNode: CompositeGeneratorNode): void {
-    //const maybeExtends = _class.superType ? ` extends ${_class.superType.$refText}` : '';
     const maybeExtends = _class.inheritance.length !== 0 ? ` extends ${_class.inheritance[0].class.$refText}` : '';
     let maybeImplements: string = "";
     if (_class.Implementation.length !== 0) {
@@ -129,55 +127,100 @@ function generateClass(_class: Class, fileNode: CompositeGeneratorNode): void {
 function generateFeatureForInterface(feature: Feature, interfaceBody: IndentNode): [() => void] {
     let name = feature.name;
     let type = feature.type.$refText;
-    //+ (feature.many ? '[]' : '');
+    let maybeContainsParams = feature.params.length;
+
+    //generateParams
 
     if (feature.many) {
         type += '[]'.toString();
     } else {
-        if (type.startsWith("void")) {
-            name += '()'.toString();
+        if (maybeContainsParams != 0) {
+            //name += '()'.toString();
+            name += '('
+            for (let i = 0; i < feature.params.length; ++i) {
+                name += feature.params[i].type.$refText + ': ';
+                if (i == feature.params.length - 1) {
+                    name += feature.params[i].name;
+                    break;
+                }
+                name += feature.params[i].name + ', ';
+            }
+            name += ')'
+        } else {
+            name += '()';
         }
         type += ''.toString();
     }
     return [
         () => { // generate the field
             interfaceBody.append(`${type} ${name};`, NL);
-        }
+        },
     ]
 }
 
 function generateFeatureForClass(feature: Feature, classBody: IndentNode): [() => void, () => void, () => void, () => void] {
-    const name = feature.name;
-    const type = feature.type.$refText + (feature.many ? '[]' : '');
+    let name = feature.name;
+    let type = feature.type.$refText + (feature.many ? '[]' : '');
+    let maybeContainsParams = feature.params.length;
+    let maybeMethod = feature.param;
 
     return [
         () => { // generate the field
-            classBody.append(`private ${type} ${name};`, NL);
+            if (!maybeMethod) {
+                classBody.append(`private ${type} ${name};`, NL);
+            }
         },
         () => { // generate the setter
-            classBody.append(NL);
-            classBody.append(`public void set${_.upperFirst(name)}(${type} ${name}) {`, NL);
-            classBody.indent(methodBody => {
-                methodBody.append(`this.${name} = ${name};`, NL);
-            });
-            classBody.append('}', NL);
+            if (!maybeMethod) {
+                classBody.append(NL);
+                classBody.append(`public void set${_.upperFirst(name)}(${type} ${name}) {`, NL);
+                classBody.indent(methodBody => {
+                    methodBody.append(`this.${name} = ${name};`, NL);
+                });
+                classBody.append('}', NL);
+            }
         },
         () => { // generate the getter
-            classBody.append(NL);
-            classBody.append(`public ${type} get${_.upperFirst(name)}() {`, NL);
-            classBody.indent(methodBody => {
-                methodBody.append(`return ${name};`, NL);
-            });
-            classBody.append('}', NL);
-        },
-        () => { //generate the method
-            //TODO refactor
-            if (type.startsWith("void")) {
+            if (!maybeMethod) {
                 classBody.append(NL);
                 classBody.append(`public ${type} get${_.upperFirst(name)}() {`, NL);
                 classBody.indent(methodBody => {
-                    methodBody.append(`System.out.println("${name}");`, NL);
+                    methodBody.append(`return ${name};`, NL);
                 });
+                classBody.append('}', NL);
+            }
+        },
+        () => { //generate the method
+            //TODO refactor
+            if (maybeMethod) {
+                if (maybeContainsParams != 0) {
+                    //name += '()'.toString();
+                    name += '('
+                    for (let i = 0; i < feature.params.length; ++i) {
+                        name += feature.params[i].type.$refText + ': ';
+                        if (i == feature.params.length - 1) {
+                            name += feature.params[i].name;
+                            break;
+                        }
+                        name += feature.params[i].name + ', ';
+                    }
+                    name += ')'
+                } else {
+                    name += '()';
+                }
+                type += ''.toString();
+                //appending
+                classBody.append(NL);
+                classBody.append(`public ${type} ${name} {`, NL);
+                if (type.includes("void")) {
+                    classBody.indent(methodBody => {
+                        methodBody.append(`System.out.println("${name}");`, NL);
+                    });
+                } else {
+                    classBody.indent(methodBody => {
+                        methodBody.append(`return ${null};`, NL);
+                    });
+                }
                 classBody.append('}', NL);
             }
         }

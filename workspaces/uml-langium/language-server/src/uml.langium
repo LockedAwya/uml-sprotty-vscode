@@ -33,11 +33,13 @@ Interface:
 Implementation:
     'implements' (interface+=[Interface])+;
 
-ContainsParams:
-    '(' (param+=Param)*',' ')';
+//a feature can contain any number of other params
+// ContainsParams:
+//     '(' (param+=Param)* ')';
 
 Param:
-    (many?='many')? name=ID (containsParams+=ContainsParams)? ':' type=[Type:QualifiedName];
+    //'('name=ID ':' type=[Type:QualifiedName]')';
+    (many?='many')? name=ID ':' type=[Type:QualifiedName];
 
 //a class can extend only one another class
 Inheritance:
@@ -48,7 +50,10 @@ InterfaceInheritance:
     'extends' (interface+=[Interface])+;
 
 Feature:
-    (many?='many')? name=ID (ContainsParams)':' type=[Type:QualifiedName];
+    (many?='many')? name=ID (param?='(' (params+=Param)* ')')?':' type=[Type:QualifiedName];
+
+// Feature:
+//     (many?='many')? name=ID ':' type=[Type:QualifiedName];
 
 QualifiedName returns string:
     ID ('.' ID)*;

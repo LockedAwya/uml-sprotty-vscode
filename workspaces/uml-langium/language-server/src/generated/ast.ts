@@ -8,7 +8,7 @@ import { AstNode, AbstractAstReflection, Reference, ReferenceInfo, TypeMetaData 
 
 export type QualifiedName = string;
 
-export type Type = Class | DataType;
+export type Type = Class | DataType | Interface;
 
 export const Type = 'Type';
 
@@ -49,6 +49,8 @@ export interface Feature extends AstNode {
     readonly $type: 'Feature';
     many: boolean
     name: string
+    param: boolean
+    params: Array<Param>
     type: Reference<Type>
 }
 
@@ -108,6 +110,20 @@ export function isInterfaceInheritance(item: unknown): item is InterfaceInherita
     return reflection.isInstance(item, InterfaceInheritance);
 }
 
+export interface Param extends AstNode {
+    readonly $container: Feature;
+    readonly $type: 'Param';
+    many: boolean
+    name: string
+    type: Reference<Type>
+}
+
+export const Param = 'Param';
+
+export function isParam(item: unknown): item is Param {
+    return reflection.isInstance(item, Param);
+}
+
 export interface Umlmodel extends AstNode {
     readonly $type: 'Umlmodel';
     classes: Array<Class>
@@ -131,6 +147,7 @@ export interface UmlAstType {
     Inheritance: Inheritance
     Interface: Interface
     InterfaceInheritance: InterfaceInheritance
+    Param: Param
     Type: Type
     Umlmodel: Umlmodel
 }
@@ -138,13 +155,14 @@ export interface UmlAstType {
 export class UmlAstReflection extends AbstractAstReflection {
 
     getAllTypes(): string[] {
-        return ['Class', 'DataType', 'Feature', 'Implementation', 'Inheritance', 'Interface', 'InterfaceInheritance', 'Type', 'Umlmodel'];
+        return ['Class', 'DataType', 'Feature', 'Implementation', 'Inheritance', 'Interface', 'InterfaceInheritance', 'Param', 'Type', 'Umlmodel'];
     }
 
     protected override computeIsSubtype(subtype: string, supertype: string): boolean {
         switch (subtype) {
             case Class:
-            case DataType: {
+            case DataType:
+            case Interface: {
                 return this.isSubtype(Type, supertype);
             }
             default: {
@@ -156,7 +174,8 @@ export class UmlAstReflection extends AbstractAstReflection {
     getReferenceType(refInfo: ReferenceInfo): string {
         const referenceId = `${refInfo.container.$type}:${refInfo.property}`;
         switch (referenceId) {
-            case 'Feature:type': {
+            case 'Feature:type':
+            case 'Param:type': {
                 return Type;
             }
             case 'Implementation:interface':
@@ -189,7 +208,9 @@ export class UmlAstReflection extends AbstractAstReflection {
                 return {
                     name: 'Feature',
                     mandatory: [
-                        { name: 'many', type: 'boolean' }
+                        { name: 'many', type: 'boolean' },
+                        { name: 'param', type: 'boolean' },
+                        { name: 'params', type: 'array' }
                     ]
                 };
             }
@@ -215,6 +236,14 @@ export class UmlAstReflection extends AbstractAstReflection {
                     name: 'InterfaceInheritance',
                     mandatory: [
                         { name: 'interface', type: 'array' }
+                    ]
+                };
+            }
+            case 'Param': {
+                return {
+                    name: 'Param',
+                    mandatory: [
+                        { name: 'many', type: 'boolean' }
                     ]
                 };
             }

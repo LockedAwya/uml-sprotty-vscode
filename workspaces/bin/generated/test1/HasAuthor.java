@@ -10,4 +10,16 @@ class HasAuthor {
     public String getAuthor() {
         return author;
     }
+
+    public String func(String: test1, String: test2, String: test3) {
+        return null;
+    }
+
+    public void func1() {
+        System.out.println("func1()");
+    }
+
+    public void func2(String: test1) {
+        System.out.println("func2(String: test1)");
+    }
 }
