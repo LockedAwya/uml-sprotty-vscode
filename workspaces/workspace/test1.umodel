@@ -18,10 +18,6 @@ interface Test3 {
     title3: String
 }
 
-interface Test extends Test1 Test2 Test3 {
-    test: String
-}
-
 class HasAuthor {
     author: String
     func(test1: String test2: String test3: String): String

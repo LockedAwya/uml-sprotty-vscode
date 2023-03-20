@@ -113,13 +113,18 @@ function generateClass(_class: Class, fileNode: CompositeGeneratorNode): void {
         }
     }
     fileNode.append(`class ${_class.name}${maybeExtends}${maybeImplements} {`, NL);
-    if (maybeImplements != "") {
-
-    }
     fileNode.indent(classBody => {
         const featureData = _class.features.map(f => generateFeatureForClass(f, classBody));
         featureData.forEach(([generateField, ,]) => generateField());
         featureData.forEach(([, generateSetter, generateGetter, generateMethod]) => { generateSetter(); generateGetter(); generateMethod() });
+        if (_class.Implementation.length !== 0) {
+            for (let i = 0; i < _class.Implementation[0].interface.length; ++i) {
+                const overridedFeatureImplements = _class.Implementation[0].interface[i].ref?.features.map(f => overridedImplementedMethods(f, classBody)) ?? undefined;
+                if (overridedFeatureImplements !== undefined) {
+                    overridedFeatureImplements.forEach(([generateMethod, ,]) => generateMethod());
+                }
+            }
+        }
     });
     fileNode.append('}', NL);
 }
@@ -155,6 +160,49 @@ function generateFeatureForInterface(feature: Feature, interfaceBody: IndentNode
             interfaceBody.append(`${type} ${name};`, NL);
         },
     ]
+}
+
+function overridedImplementedMethods(_interfaceFeature: Feature, classBody: IndentNode): [() => void] {
+    let name = _interfaceFeature.name;
+    let type = _interfaceFeature.type.$refText + (_interfaceFeature.many ? '[]' : '');
+    let maybeContainsParams = _interfaceFeature.params.length;
+    let maybeMethod = _interfaceFeature.param;
+    return [
+        () => {
+            if (maybeMethod) {
+                if (maybeContainsParams != 0) {
+                    //name += '()'.toString();
+                    name += '('
+                    for (let i = 0; i < _interfaceFeature.params.length; ++i) {
+                        name += _interfaceFeature.params[i].type.$refText + ' ';
+                        if (i == _interfaceFeature.params.length - 1) {
+                            name += _interfaceFeature.params[i].name;
+                            break;
+                        }
+                        name += _interfaceFeature.params[i].name + ', ';
+                    }
+                    name += ')'
+                } else {
+                    name += '()';
+                }
+                type += ''.toString();
+                //appending
+                classBody.append(NL);
+                classBody.append(`@Override`, NL);
+                classBody.append(`public ${type} ${name} {`, NL);
+                if (type.includes("void")) {
+                    classBody.indent(methodBody => {
+                        methodBody.append(`System.out.println("${name}");`, NL);
+                    });
+                } else {
+                    classBody.indent(methodBody => {
+                        methodBody.append(`return ${null};`, NL);
+                    });
+                }
+                classBody.append('}', NL);
+            }
+        }
+    ];
 }
 
 function generateFeatureForClass(feature: Feature, classBody: IndentNode): [() => void, () => void, () => void, () => void] {

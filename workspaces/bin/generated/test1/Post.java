@@ -37,4 +37,14 @@ class Post extends HasAuthor implements Test1, Test2, Test3 {
     public String getTest() {
         return test;
     }
+
+    @Override
+    public void foo(String name, String name1) {
+        System.out.println("foo(String name, String name1)");
+    }
+
+    @Override
+    public void foo() {
+        System.out.println("foo()");
+    }
 }
