@@ -85,13 +85,13 @@ function generateInterface(_interface: Interface, fileNode: CompositeGeneratorNo
         for (let i = 0; i < _interface.interfaceInheritance[0].interface.length; i++) {
             //maybeExtends += _interface.interfaceInheritance[0].interface[i].$refText.toString() + " ".toString();
             if (i == _interface.interfaceInheritance[0].interface.length - 1) {
-                maybeExtends += " ".toString() + _interface.interfaceInheritance[0].interface[i].$refText.toString() + " ".toString();
+                maybeExtends += " ".toString() + _interface.interfaceInheritance[0].interface[i].$refText.toString();
             } else {
                 maybeExtends += " ".toString() + _interface.interfaceInheritance[0].interface[i].$refText.toString() + ",".toString();
             }
         }
     }
-    fileNode.append(`interface ${_interface.name}${maybeExtends}{`, NL);
+    fileNode.append(`interface ${_interface.name}${maybeExtends} {`, NL);
     fileNode.indent(interfaceBody => {
         const featureData = _interface.features.map(f => generateFeatureForInterface(f, interfaceBody));
         featureData.forEach(([generateField, ,]) => generateField());
@@ -101,18 +101,20 @@ function generateInterface(_interface: Interface, fileNode: CompositeGeneratorNo
 
 function generateClass(_class: Class, fileNode: CompositeGeneratorNode): void {
     const maybeExtends = _class.inheritance.length !== 0 ? ` extends ${_class.inheritance[0].class.$refText}` : '';
+    const maybeAbstractClass = _class.abstract ? `abstract` : '';
     let maybeImplements: string = "";
     if (_class.Implementation.length !== 0) {
         maybeImplements += " implements".toString();
         for (let i = 0; i < _class.Implementation[0].interface.length; ++i) {
             if (i == _class.Implementation[0].interface.length - 1) {
                 maybeImplements += " ".toString() + _class.Implementation[0].interface[i].$refText.toString();
+                //maybeImplements += " ".toString() + _class.Implementation[0].interface[i].ref?.interfaceInheritance[0].
             } else {
                 maybeImplements += " ".toString() + _class.Implementation[0].interface[i].$refText.toString() + ",".toString();
             }
         }
     }
-    fileNode.append(`class ${_class.name}${maybeExtends}${maybeImplements} {`, NL);
+    fileNode.append(`${maybeAbstractClass} class ${_class.name}${maybeExtends}${maybeImplements} {`, NL);
     fileNode.indent(classBody => {
         const featureData = _class.features.map(f => generateFeatureForClass(f, classBody));
         featureData.forEach(([generateField, ,]) => generateField());

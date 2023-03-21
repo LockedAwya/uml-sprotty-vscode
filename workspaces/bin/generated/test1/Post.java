@@ -1,6 +1,6 @@
 package test1;
 
-class Post extends HasAuthor implements Test1, Test2, Test3 {
+ class Post extends HasAuthor implements Test1, Test3 {
     private String title;
     private String content;
     private Comment[] comments;
@@ -41,10 +41,5 @@ class Post extends HasAuthor implements Test1, Test2, Test3 {
     @Override
     public void foo(String name, String name1) {
         System.out.println("foo(String name, String name1)");
-    }
-
-    @Override
-    public void foo() {
-        System.out.println("foo()");
     }
 }

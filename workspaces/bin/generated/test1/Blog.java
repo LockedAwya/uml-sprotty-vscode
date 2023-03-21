@@ -1,6 +1,6 @@
 package test1;
 
-class Blog {
+ class Blog {
     private String title;
     private Post[] posts;
 

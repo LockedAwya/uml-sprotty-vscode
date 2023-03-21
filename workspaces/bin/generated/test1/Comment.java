@@ -1,6 +1,6 @@
 package test1;
 
-class Comment extends HasAuthor {
+ class Comment extends HasAuthor {
     private String content;
 
     public void setContent(String content) {

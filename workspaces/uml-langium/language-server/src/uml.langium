@@ -14,10 +14,8 @@ Type:
 DataType:
     'datatype' name=ID;
 
-// Class:
-//     'class' name=ID (inheritance=Inheritance)? '{'
-//         (features+=Feature)*
-//     '}';
+// AccessIndentifiers:
+//     'private' | 'public' | 'protected';
 
 Class:
     (abstract?='abstract')? 'class' name=ID (inheritance+=Inheritance)? (Implementation+=Implementation)? '{'

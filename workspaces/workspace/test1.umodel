@@ -4,20 +4,6 @@ datatype String
 datatype Int
 datatype void
 
-interface Test1 {
-    title: String
-    foo(name: String name1: String): void
-    foo(): void
-}
-
-interface Test2 {
-    title: String
-}
-
-interface Test3 {
-    title3: String
-}
-
 class HasAuthor {
     author: String
     func(test1: String test2: String test3: String): String
@@ -25,7 +11,7 @@ class HasAuthor {
     func2(test1: String): void
 }
 
-class Post extends HasAuthor implements Test1 Test2 Test3 {
+class Post extends HasAuthor implements Test1 Test3 {
     title: String
     content: String
     many comments: Comment
@@ -39,4 +25,23 @@ class Blog {
 
 class Comment extends HasAuthor {
     content: String
+}
+
+interface Test1 {
+    title: String
+    foo(name: String name1: String): void
+}
+
+interface Test2 {
+    title: String
+    foo(): void
+}
+
+interface Test3 {
+    title3: String
+}
+
+abstract class T {
+    titlee: String
+    many comments: Comment
 }
